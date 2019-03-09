@@ -1,4 +1,4 @@
-Git for data
+# Git for data
 
 It seems that the need for version-controlled data comes times and times again,
 yet there is no usable solution for that problem, so I am considering building it myself.
@@ -22,53 +22,49 @@ Note 1: if you read this, I assume you are familiar with git internals.
 Note 2: I don't really know much about git and databases, this is just the beginning for me. Comments and reading materials are welcome.
 
 
-General idea:
+# General idea:
 
-    Git stores content for files. Git for data would store patches for subsets of data (partitions).
+Git stores content for files. Git for data would store patches for subsets of data (partitions).
 
+* Perceived data model: let start with a set of rows, same as relational database table. We have set of rows, each of them conforming to some predefined schema. For example lets have datased defined as Users(id: u64, name: string, email: string). Each row must contain unique identifier.
 
-    * Perceived data model: let start with a set of rows, same as relational database table. We have set of rows, each of them conforming to some predefined schema. For example lets have datased defined as Users(id: u64, name: string, email: string). Each row must contain unique identifier.
-
-    * Versioning: the state of our dataset will be represented by a hash (commit), as in git.
+* Versioning: the state of our dataset will be represented by a hash (commit), as in git.
     
-    * Partitioning: To make operations more efficient we need to add one more thing: partition strategy.
-      We will come with a way of splitting whole dataset into smaller, manageable parts.
-      An example of a strategy would be first letter of the name, range of dates, hash of some field(s).
-      The strategy would be defined once and immutable (transfering immutability to any fields it relies on.
+* Partitioning: To make operations more efficient we need to add one more thing: partition strategy. We will come with a way of splitting whole dataset into smaller, manageable parts.
+An example of a strategy would be first letter of the name, range of dates, hash of some field(s).
+The strategy would be defined once and immutable (transfering immutability to any fields it relies on.
 
-    * Data definition:  
+* Data definition:  
 
-    Storage model: just as git, storage would be key-value store, where key represent a hash of an object.
-    The object itself can be:
+Storage model: just as git, storage would be key-value store, where key represent a hash of an object.
+The object itself can be:
 
-        * patchset:
-            list of changes for given partition. For example for partitioning by first letter of a name (unicode aside for a moment), patches data would look like this
+* patchset: list of changes for given partition. For example for partitioning by first letter of a name (unicode aside for a moment), patches data would look like this
 
-            change1: add row (id=1, name="Abelard", email="...")
-            change2: set email to "a@newcorp.com" for id=2
-            change3: delete id=7
+    change1: add row (id=1, name="Abelard", email="...")
+    change2: set email to "a@newcorp.com" for id=2
+    change3: delete id=7
 
-            Each change refers to single row: it can't be "update users set email=lowercase(email)", though a tool that converts that into set of changes could be created). In other words, change defines what data should be, not what operations should be applied.
+Each change refers to single row: it can't be "update users set email=lowercase(email)", though a tool that converts that into set of changes could be created). In other words, change defines what data should be, not what operations should be applied.
 
-            Schema change would be included here as well. (Change 4: add field "last visited" with default value of None for id=1,2,3,4)
+Schema change would be included here as well. (Change 4: add field "last visited" with default value of None for id=1,2,3,4)
 
-        * tree:            
+    * tree:            
 
-            set of patchsets, hash of a parent
+        set of patchsets, hash of a parent
 
-                partition "a": patchest 1
-                partition "b": patchset 2
-                
-                parent: hash of a parent.
+        partition "a": patchest 1
+        partition "b": patchset 2
+        parent: hash of a parent.
 
-            That would mean: data exactly as for parent, except for partition "a" and "b", where patchest 1 and 2 should be applied, respectively.
+    That would mean: data exactly as for parent, except for partition "a" and "b", where patchest 1 and 2 should be applied, respectively.
 
-        * commit: same as in git, we would record tree hash, author name, date and message
+    * commit: same as in git, we would record tree hash, author name, date and message
 
-            tree: hash(tree)
-            comment: "Add abelard to our users"
-            date: "2019-03-05 11:34:00"
-            author: "a.b@whatever.com"
+        tree: hash(tree)
+        comment: "Add abelard to our users"
+        date: "2019-03-05 11:34:00"
+        author: "a.b@whatever.com"
             
 
     Having all that, we would be able to track all changes and obtain a state of the whole data set for any given commit.
