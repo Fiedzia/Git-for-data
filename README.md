@@ -101,3 +101,14 @@ While the phase "sql" was not used so far and doesn't need to be, its natural to
 * floating point numbers would have "sane type" that does not accept NaN/Infinity and it would by default.
 
 I value correctness over performance, and therefore would like to have support for transactions (with a concepts that are equivalents of multiple tables in a database, cross-table validation and relations would be nice to have) 
+
+
+
+## Existing projects
+
+* Filesystem-level snapshots. Kind of work, but obviously have no understanding of the data whatsoever,
+so you know that "some data changed between snapshot a and b", but beyond file size you can't say anything else about it. Diffs and merges are out of the question.
+
+* Storing data dumps as text in git. Sort of meets requirements, but doesn't scale very well.
+
+
