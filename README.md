@@ -39,7 +39,7 @@ In other words, I want to be able to do this:
 
             create books table and add Good omens
 
-        created: /tables/bookd (id:int, author: varchar, title: varchar)
+        created: /tables/books (id:int, author: varchar, title: varchar)
         created: /tables/books/1 (1, "Terry Pratchett", "Good Omens")
 
         commit 0002
