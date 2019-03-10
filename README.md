@@ -15,6 +15,43 @@ What I would need from such tool:
 - the source and the manner of development should be open
 - it should be easy to integrate with existing project, working as a library.
 
+In other words, I want to be able to do this:
+
+    ```
+    mkdir myproject && cd myproject
+    gfd init
+    gfd exec 'create table books(id:int, author: varchar, title: varchar)'
+    gfd exec 'insert into books(1, "Terry Pratchett", "Good omens")'
+    gfd status
+        created: tables/books/schema
+        created: tables/books/data/1
+
+    gfd commit -m 'create books table and add Good omens'
+    gfd push origin master
+    ... some time later, on another server
+    gfd push origin:new_branch
+    gfd checkout new_branch
+    gfd pull origin new_users
+    gfd log 
+        commit: 0001
+        author: you <your@email.com>
+        date: 2 hours ago
+
+            create books table and add Good omens
+
+        created: /tables/bookd (id:int, author: varchar, title: varchar)
+        created: /tables/books/1 (1, "Terry Pratchett", "Good Omens")
+
+        commit 0002
+        author: someone else<someone@else.com>
+
+            fix missing author
+
+        modified /tables/books/1: 
+            -author: "Terry Pratchett"
+            +author: "Terry Pratchett & Neil Gaiman"
+    ```
+
 
 No such thing exists as far as I know, at least in the form I would be happy with.
 
@@ -111,4 +148,4 @@ so you know that "some data changed between snapshot a and b", but beyond file s
 
 * Storing data dumps as text in git. Sort of meets requirements, but doesn't scale very well.
 
-
+* Database audits & replication: No, it doesn't work. It only works one way - to pull changes from single source. There is no concept of braches. You can't have local modification.
