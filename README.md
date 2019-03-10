@@ -100,4 +100,4 @@ While the phase "sql" was not used so far and doesn't need to be, its natural to
 * numbers would be defined with type information (u32/i32/u64/i64/decimal/bigint)
 * floating point numbers would have "sane type" that does not accept NaN/Infinity and it would by default.
 
-I value correctness over performance, and therefore would like to have support for transactions (with a concepts that are equivalents of multiple tables in a database, cross-table validation and relations and 
+I value correctness over performance, and therefore would like to have support for transactions (with a concepts that are equivalents of multiple tables in a database, cross-table validation and relations would be nice to have) 
