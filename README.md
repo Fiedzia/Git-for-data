@@ -96,8 +96,8 @@ Data validation (especially relational part of it) may require materialisation.
 
 While the phase "sql" was not used so far and doesn't need to be, its natural to think about having some sql-like layer on top of the whole thing (even if only as a client convenience, not related to server), so I will list some of my nitpick with sql:
 
-    * it leans towards users a bit to much. If I'd design a query language (actually, this is relevant for storage format also), I would make everything not-null by default, treat nullable fields as distinct type and require any operations on them to define treatments of nulls explicitely.
-    * numbers would be defined with type information (u32/i32/u64/i64/decimal/bigint)
-    * floating point numbers would have "sane type" that does not accept NaN/Infinity and it would by default.
+* it leans towards users a bit to much. If I'd design a query language (actually, this is relevant for storage format also), I would make everything not-null by default, treat nullable fields as distinct type and require any operations on them to define treatments of nulls explicitely.
+* numbers would be defined with type information (u32/i32/u64/i64/decimal/bigint)
+* floating point numbers would have "sane type" that does not accept NaN/Infinity and it would by default.
 
 I value correctness over performance, and therefore would like to have support for transactions (with a concepts that are equivalents of multiple tables in a database, cross-table validation and relations and 
